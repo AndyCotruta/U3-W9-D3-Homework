@@ -7,7 +7,7 @@ import BookList from "./components/BookListComponent";
 
 function App() {
   return (
-    <div>
+    <div className="body">
       {" "}
       <JumbotronComponent />
       <WarningSign alertTitle="This is the alert title" />
