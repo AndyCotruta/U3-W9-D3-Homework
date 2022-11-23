@@ -1,0 +1,24 @@
+.jumbotron {
+  background-color: blanchedalmond;
+  background-image: url("https://images.unsplash.com/photo-1497633762265-9d179a990aa6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1746&q=80");
+  padding-inline: 1rem;
+  height: 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: rgb(227, 240, 247);
+}
+
+.title {
+  margin: 0;
+  font-size: 5rem;
+}
+
+.subtitle {
+  margin: 0;
+}
+
+.flex-group {
+  display: flex;
+  flex-wrap: wrap;
+}
