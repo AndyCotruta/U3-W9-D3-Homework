@@ -44,20 +44,21 @@ class CommentArea extends Component {
   render() {
     return (
       <div className="d-column">
+        <h6 className="mt-2">Comments List</h6>
         {this.state.isLoading && (
-          <Spinner
-            animation="border"
-            role="status"
-            className="custom-spinner-color"
-          >
-            <span className="sr-only">Loading...</span>
-          </Spinner>
+          <div className="isLoadingText d-flex align-items-center mb-2">
+            <div className=" mr-2">Content is loading...</div>
+            <Spinner animation="border" role="status" className="spinner">
+              <span className="sr-only">Loading...</span>
+            </Spinner>
+          </div>
         )}
         {this.state.isError && (
           <Alert variant="danger">
             Ouch, something went wrong while loading comments :(
           </Alert>
         )}
+
         <CommentsList
           comments={this.state.comments}
           reloadComments={this.fetchComments}

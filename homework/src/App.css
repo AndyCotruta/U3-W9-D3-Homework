@@ -103,10 +103,6 @@
   align-items: center;
 }
 
-.commentListItem:focus {
-  outline: none;
-}
-
 .submitButton {
   width: 100%;
   background-color: #706e62 !important;
@@ -127,4 +123,14 @@
 
 .deleteButton:hover {
   transform: scale(1.1);
+}
+
+.spinner {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+.isLoadingText {
+  color: rgb(149, 58, 58);
+  font-size: 14px;
 }

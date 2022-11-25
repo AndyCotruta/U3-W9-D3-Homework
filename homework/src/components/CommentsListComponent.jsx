@@ -30,7 +30,6 @@ class CommentsList extends Component {
   render() {
     return (
       <>
-        <h6 className="mt-2">Comments List</h6>
         {this.props.comments.slice(0, 3).map((comment) => (
           <ListGroup className="my-1" key={comment._id}>
             <ListGroup.Item className="commentListItem">
