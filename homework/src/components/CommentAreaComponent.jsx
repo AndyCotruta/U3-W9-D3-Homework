@@ -38,8 +38,14 @@ class CommentArea extends Component {
   render() {
     return (
       <div className="d-column">
-        <CommentsList comments={this.state.comments} />
-        <AddComment elementId={this.props.elementId} />
+        <CommentsList
+          comments={this.state.comments}
+          reloadComments={this.fetchComments}
+        />
+        <AddComment
+          elementId={this.props.elementId}
+          reloadComments={this.fetchComments}
+        />
       </div>
     );
   }

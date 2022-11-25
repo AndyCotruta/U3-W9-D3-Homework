@@ -32,6 +32,7 @@ class AddComment extends Component {
       );
       if (response.ok) {
         alert("Comment posted successfully");
+        this.props.reloadComments();
         this.setState({ addComment: { comment: "", rate: "" } });
       } else {
         console.log("something went wrong!");

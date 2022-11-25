@@ -98,6 +98,9 @@
   background-color: #706e62 !important;
   border: none !important;
   color: inherit !important;
+  display: flex !important;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .commentListItem:focus {
@@ -113,4 +116,15 @@
 
 .submitButton:hover {
   background-color: #3e3d37 !important;
+}
+
+.deleteButton {
+  font-size: 1.5rem;
+  color: rgb(149, 58, 58);
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.deleteButton:hover {
+  transform: scale(1.1);
 }
