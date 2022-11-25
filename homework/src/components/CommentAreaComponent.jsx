@@ -1,10 +1,14 @@
 import { Component } from "react";
+import Spinner from "react-bootstrap/Spinner";
+import Alert from "react-bootstrap/Alert";
 import AddComment from "./AddCommentComponent";
 import CommentsList from "./CommentsListComponent";
 
 class CommentArea extends Component {
   state = {
     comments: [],
+    isLoading: true,
+    isError: false,
   };
 
   fetchComments = async () => {
@@ -21,12 +25,14 @@ class CommentArea extends Component {
       );
       if (response.ok) {
         let data = await response.json();
-        this.setState({ comments: data });
+        this.setState({ comments: data, isLoading: false });
         console.log(data);
       } else {
+        this.setState({ isLoading: false, isError: true });
         console.log("Error fetching the comments for this book");
       }
     } catch (error) {
+      this.setState({ isLoading: false, isError: true });
       console.log(error);
     }
   };
@@ -38,6 +44,20 @@ class CommentArea extends Component {
   render() {
     return (
       <div className="d-column">
+        {this.state.isLoading && (
+          <Spinner
+            animation="border"
+            role="status"
+            className="custom-spinner-color"
+          >
+            <span className="sr-only">Loading...</span>
+          </Spinner>
+        )}
+        {this.state.isError && (
+          <Alert variant="danger">
+            Ouch, something went wrong while loading comments :(
+          </Alert>
+        )}
         <CommentsList
           comments={this.state.comments}
           reloadComments={this.fetchComments}
