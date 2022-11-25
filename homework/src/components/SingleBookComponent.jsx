@@ -41,6 +41,7 @@ class SingleBook extends Component {
           </div>
 
           <Card.Img
+            id={`${this.state.clicked ? "selectedBook" : ""}`}
             className="bookImg"
             variant="top"
             src={this.props.book.img}
