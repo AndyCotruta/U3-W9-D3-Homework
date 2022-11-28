@@ -7,8 +7,21 @@ import CommentsList from "./CommentsListComponent";
 class CommentArea extends Component {
   state = {
     comments: [],
-    isLoading: true,
-    isError: false,
+
+    addComment: { comment: "", rate: "", elementId: "" },
+  };
+
+  // state = {
+  //   addComment: { comment: "", rate: "", elementId: this.props.elementId },
+  // };
+
+  onChangeHandler = (value, fieldToSet) => {
+    this.setState({
+      addComment: {
+        ...this.state.addComment,
+        [fieldToSet]: value,
+      },
+    });
   };
 
   fetchComments = async () => {
@@ -25,7 +38,14 @@ class CommentArea extends Component {
       );
       if (response.ok) {
         let data = await response.json();
-        this.setState({ comments: data, isLoading: false });
+        this.setState({
+          comments: data,
+          isLoading: false,
+          addComment: {
+            ...this.state.addComment,
+            elementId: this.props.elementId,
+          },
+        });
         console.log(data);
       } else {
         this.setState({ isLoading: false, isError: true });
@@ -41,11 +61,14 @@ class CommentArea extends Component {
     this.fetchComments();
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.elementId !== this.props.elementId) this.fetchComments();
+  }
+
   render() {
     return (
       <div className="d-column">
-        <h6 className="mt-2">Comments List</h6>
-        {this.state.isLoading && (
+        {this.props.isLoading && (
           <div className="isLoadingText d-flex align-items-center mb-2">
             <div className=" mr-2">Content is loading...</div>
             <Spinner animation="border" role="status" className="spinner">
@@ -58,6 +81,15 @@ class CommentArea extends Component {
             Ouch, something went wrong while loading comments :(
           </Alert>
         )}
+        {this.props.elementTitle && (
+          <div className="commentsTitle">{this.props.elementTitle}</div>
+        )}
+        <h6 className="mt-2">Comments List</h6>
+        {!this.props.elementId && (
+          <Alert variant="danger">
+            Please click on a card to load comments.
+          </Alert>
+        )}
 
         <CommentsList
           comments={this.state.comments}
@@ -66,6 +98,8 @@ class CommentArea extends Component {
         <AddComment
           elementId={this.props.elementId}
           reloadComments={this.fetchComments}
+          onChangeHandler={this.onChangeHandler}
+          addComment={this.state.addComment}
         />
       </div>
     );

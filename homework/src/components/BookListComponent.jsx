@@ -1,11 +1,24 @@
 import SingleBook from "./SingleBookComponent";
 import fantasy from "../data/books/fantasy.json";
 import { Component } from "react";
+import CommentArea from "./CommentAreaComponent";
 
 class BookList extends Component {
   state = {
     searchedQuery: "",
     filteredArray: fantasy,
+    clickedBook: false,
+    clickedBookId: undefined,
+    clickedBookTitle: undefined,
+    isLoading: false,
+    isError: false,
+  };
+
+  handleBookClick = (e, id, title) => {
+    this.setState({ clickedBook: true });
+    this.setState({ clickedBookId: id });
+    this.setState({ clickedBookTitle: title });
+    // this.setState({ isLoading: true });
   };
 
   handleOnChange = (e) => {
@@ -35,10 +48,24 @@ class BookList extends Component {
             onChange={(e) => this.handleOnChange(e)}
           ></input>
         </div>
-        <div className="flex-group mx-4">
-          {this.state.filteredArray.map((book) => (
-            <SingleBook book={book} key={book.asin} />
-          ))}
+
+        <div className="row w-100">
+          <div className="col leftRow">
+            {this.state.filteredArray.map((book) => (
+              <SingleBook
+                book={book}
+                handleBookClick={this.handleBookClick}
+                key={book.asin}
+              />
+            ))}
+          </div>{" "}
+          <div className="rightRow">
+            <CommentArea
+              elementId={this.state.clickedBookId}
+              elementTitle={this.state.clickedBookTitle}
+              isLoading={this.state.isLoading}
+            />
+          </div>
         </div>
       </>
     );
