@@ -3,14 +3,18 @@ import { Form, Button } from "react-bootstrap";
 import Alert from "react-bootstrap/Alert";
 
 class AddComment extends Component {
-  // onChangeHandler = (value, fieldToSet) => {
-  //   this.setState({
-  //     addComment: {
-  //       ...this.state.addComment,
-  //       [fieldToSet]: value,
-  //     },
-  //   });
-  // };
+  state = {
+    addComment: { comment: "", rate: "1", elementId: "" },
+  };
+
+  onChangeHandler = (value, fieldToSet) => {
+    this.setState({
+      addComment: {
+        ...this.state.addComment,
+        [fieldToSet]: value,
+      },
+    });
+  };
 
   onSubmitHandler = async (e) => {
     e.preventDefault();
@@ -19,7 +23,10 @@ class AddComment extends Component {
         `https://striveschool-api.herokuapp.com/api/comments/`,
         {
           method: "POST",
-          body: JSON.stringify(this.props.addComment),
+          body: JSON.stringify({
+            ...this.state.addComment,
+            elementId: this.props.elementId,
+          }),
           headers: {
             "Content-Type": "application/json",
             Authorization:
@@ -58,10 +65,10 @@ class AddComment extends Component {
                   className="commentListItem"
                   as="textarea"
                   rows={3}
-                  value={this.props.addComment.comment}
+                  value={this.state.addComment.comment}
                   required
                   onChange={(e) =>
-                    this.props.onChangeHandler(e.target.value, "comment")
+                    this.onChangeHandler(e.target.value, "comment")
                   }
                 />
               </Form.Group>
@@ -71,11 +78,9 @@ class AddComment extends Component {
                 <Form.Control
                   className="commentListItem"
                   as="select"
-                  value={this.props.addComment.rate}
+                  value={this.state.addComment.rate}
                   required
-                  onChange={(e) =>
-                    this.props.onChangeHandler(e.target.value, "rate")
-                  }
+                  onChange={(e) => this.onChangeHandler(e.target.value, "rate")}
                 >
                   <option>1</option>
                   <option>2</option>

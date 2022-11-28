@@ -10,15 +10,12 @@ class BookList extends Component {
     clickedBook: false,
     clickedBookId: undefined,
     clickedBookTitle: undefined,
-    isLoading: false,
-    isError: false,
   };
 
   handleBookClick = (e, id, title) => {
     this.setState({ clickedBook: true });
     this.setState({ clickedBookId: id });
     this.setState({ clickedBookTitle: title });
-    // this.setState({ isLoading: true });
   };
 
   handleOnChange = (e) => {
@@ -63,7 +60,6 @@ class BookList extends Component {
             <CommentArea
               elementId={this.state.clickedBookId}
               elementTitle={this.state.clickedBookTitle}
-              isLoading={this.state.isLoading}
             />
           </div>
         </div>
