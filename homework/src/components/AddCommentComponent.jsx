@@ -1,22 +1,26 @@
-import { Component } from "react";
+import { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import Alert from "react-bootstrap/Alert";
 
-class AddComment extends Component {
-  state = {
-    addComment: { comment: "", rate: "1", elementId: "" },
+const AddComment = (props) => {
+  // state = {
+  //   addComment: { comment: "", rate: "1", elementId: "" },
+  // };
+
+  const [addComment, setAddComment] = useState({ comment: "", rate: "1" });
+
+  const onChangeHandler = (value, fieldToSet) => {
+    // this.setState({
+    //   addComment: {
+    //     ...this.state.addComment,
+    //     [fieldToSet]: value,
+    //   },
+    // });
+
+    setAddComment({ ...addComment, [fieldToSet]: value });
   };
 
-  onChangeHandler = (value, fieldToSet) => {
-    this.setState({
-      addComment: {
-        ...this.state.addComment,
-        [fieldToSet]: value,
-      },
-    });
-  };
-
-  onSubmitHandler = async (e) => {
+  const onSubmitHandler = async (e) => {
     e.preventDefault();
     try {
       let response = await fetch(
@@ -24,8 +28,8 @@ class AddComment extends Component {
         {
           method: "POST",
           body: JSON.stringify({
-            ...this.state.addComment,
-            elementId: this.props.elementId,
+            ...addComment,
+            elementId: props.elementId,
           }),
           headers: {
             "Content-Type": "application/json",
@@ -36,69 +40,63 @@ class AddComment extends Component {
       );
       if (response.ok) {
         alert("Comment posted successfully");
-        this.props.reloadComments();
-        this.setState({ addComment: { comment: "", rate: "" } });
+        props.reloadComments();
+        setAddComment({ comment: "", rate: "" });
       } else {
         console.log("something went wrong!");
-        this.setState({ addComment: { comment: "", rate: "" } });
+        setAddComment({ comment: "", rate: "" });
       }
     } catch (error) {
-      this.setState({ addComment: { comment: "", rate: "" } });
+      setAddComment({ comment: "", rate: "" });
     }
   };
 
-  render() {
-    return (
-      <>
-        <h6>Add a Comment below:</h6>
-        {!this.props.elementId && (
-          <Alert variant="danger">
-            Please click on a card to add comments.
-          </Alert>
-        )}
-        {this.props.elementId && (
-          <>
-            <Form onSubmit={this.onSubmitHandler}>
-              <Form.Group>
-                <Form.Label>Comment</Form.Label>
-                <Form.Control
-                  className="commentListItem"
-                  as="textarea"
-                  rows={3}
-                  value={this.state.addComment.comment}
-                  required
-                  onChange={(e) =>
-                    this.onChangeHandler(e.target.value, "comment")
-                  }
-                />
-              </Form.Group>
+  return (
+    <>
+      <h6>Add a Comment below:</h6>
+      {!props.elementId && (
+        <Alert variant="danger">Please click on a card to add comments.</Alert>
+      )}
+      {props.elementId && (
+        <>
+          <Form onSubmit={onSubmitHandler}>
+            <Form.Group>
+              <Form.Label>Comment</Form.Label>
+              <Form.Control
+                className="commentListItem"
+                as="textarea"
+                rows={3}
+                value={addComment.comment}
+                required
+                onChange={(e) => onChangeHandler(e.target.value, "comment")}
+              />
+            </Form.Group>
 
-              <Form.Group>
-                <Form.Label>Rate</Form.Label>
-                <Form.Control
-                  className="commentListItem"
-                  as="select"
-                  value={this.state.addComment.rate}
-                  required
-                  onChange={(e) => this.onChangeHandler(e.target.value, "rate")}
-                >
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
-                </Form.Control>
-              </Form.Group>
+            <Form.Group>
+              <Form.Label>Rate</Form.Label>
+              <Form.Control
+                className="commentListItem"
+                as="select"
+                value={addComment.rate}
+                required
+                onChange={(e) => onChangeHandler(e.target.value, "rate")}
+              >
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+              </Form.Control>
+            </Form.Group>
 
-              <Button className="submitButton" type="submit">
-                Submit Comment
-              </Button>
-            </Form>
-          </>
-        )}
-      </>
-    );
-  }
-}
+            <Button className="submitButton" type="submit">
+              Submit Comment
+            </Button>
+          </Form>
+        </>
+      )}
+    </>
+  );
+};
 
 export default AddComment;

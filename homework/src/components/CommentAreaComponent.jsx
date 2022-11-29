@@ -1,20 +1,25 @@
-import { Component } from "react";
+import { useState, useCallback } from "react";
 import Spinner from "react-bootstrap/Spinner";
 import Alert from "react-bootstrap/Alert";
 import AddComment from "./AddCommentComponent";
 import CommentsList from "./CommentsListComponent";
+import { useEffect } from "react";
 
-class CommentArea extends Component {
-  state = {
-    comments: [],
-    isLoading: false,
-    isError: false,
-  };
+const CommentArea = (props) => {
+  // state = {
+  //   comments: [],
+  //   isLoading: false,
+  //   isError: false,
+  // };
 
-  fetchComments = async () => {
+  const [comments, setComments] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+
+  const fetchComments = useCallback(async () => {
     try {
       let response = await fetch(
-        `https://striveschool-api.herokuapp.com/api/comments/${this.props.elementId}`,
+        `https://striveschool-api.herokuapp.com/api/comments/${props.elementId}`,
         {
           method: "GET",
           headers: {
@@ -25,76 +30,86 @@ class CommentArea extends Component {
       );
       if (response.ok) {
         let data = await response.json();
-        this.setState({
-          comments: data,
-          isLoading: false,
-        });
+        // this.setState({
+        //   comments: data,
+        //   isLoading: false,
+        // });
+        setComments(data);
+        setIsLoading(false);
         console.log(data);
       } else {
-        this.setState({ isLoading: false, isError: true });
+        // this.setState({ isLoading: false, isError: true });
+        setIsLoading(false);
+        setIsError(true);
         console.log("Error fetching the comments for this book");
       }
     } catch (error) {
-      this.setState({ isLoading: false, isError: true });
+      // this.setState({ isLoading: false, isError: true });
+      setIsLoading(false);
+      setIsError(true);
       console.log(error);
     }
-  };
+  }, [props.elementId]);
 
-  componentDidMount() {
-    if (this.props.elementId !== undefined) {
-      this.fetchComments();
+  // componentDidMount() {
+  //   if (this.props.elementId !== undefined) {
+  //     this.fetchComments();
+  //   }
+  // }
+
+  useEffect(() => {
+    if (props.elementId !== undefined) {
+      fetchComments();
     }
-  }
+  }, [fetchComments, props.elementId]);
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.elementId !== this.props.elementId) {
-      this.setState({ isLoading: true });
-      this.setState({ comments: [] });
-      this.fetchComments();
-    }
-  }
+  // componentDidUpdate(prevProps, prevState) {
+  //   if (prevProps.elementId !== this.props.elementId) {
+  //     this.setState({ isLoading: true });
+  //     this.setState({ comments: [] });
+  //     this.fetchComments();
+  //   }
+  // }
 
-  render() {
-    return (
-      <div className="d-column">
-        {this.props.elementTitle && (
-          <div className="commentsTitle">{this.props.elementTitle}</div>
-        )}
-        {this.state.isLoading && (
-          <div className="isLoadingText d-flex align-items-center mb-2">
-            <div className=" mr-2">Content is loading...</div>
-            <Spinner animation="border" role="status" className="spinner">
-              <span className="sr-only">Loading...</span>
-            </Spinner>
-          </div>
-        )}
-        {this.state.isError && (
+  useEffect(() => {
+    setIsLoading(true);
+    setComments([]);
+    fetchComments();
+  }, [fetchComments, props.elementId]);
+
+  return (
+    <div className="d-column">
+      {props.elementTitle && (
+        <div className="commentsTitle">{props.elementTitle}</div>
+      )}
+      {isLoading && (
+        <div className="isLoadingText d-flex align-items-center mb-2">
+          <div className=" mr-2">Content is loading...</div>
+          <Spinner animation="border" role="status" className="spinner">
+            <span className="sr-only">Loading...</span>
+          </Spinner>
+        </div>
+      )}
+      {isError && (
+        <Alert variant="danger">
+          Ouch, something went wrong while loading comments :(
+        </Alert>
+      )}
+
+      {!props.elementId && (
+        <>
+          {" "}
+          <h6 className="mt-2">Comments List</h6>
           <Alert variant="danger">
-            Ouch, something went wrong while loading comments :(
+            Please click on a card to load comments.
           </Alert>
-        )}
+        </>
+      )}
 
-        {!this.props.elementId && (
-          <>
-            {" "}
-            <h6 className="mt-2">Comments List</h6>
-            <Alert variant="danger">
-              Please click on a card to load comments.
-            </Alert>
-          </>
-        )}
-
-        <CommentsList
-          comments={this.state.comments}
-          reloadComments={this.fetchComments}
-        />
-        <AddComment
-          elementId={this.props.elementId}
-          reloadComments={this.fetchComments}
-        />
-      </div>
-    );
-  }
-}
+      <CommentsList comments={comments} reloadComments={fetchComments} />
+      <AddComment elementId={props.elementId} reloadComments={fetchComments} />
+    </div>
+  );
+};
 
 export default CommentArea;
