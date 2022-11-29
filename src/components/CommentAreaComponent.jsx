@@ -16,7 +16,7 @@ const CommentArea = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 
-  const fetchComments = useCallback(async () => {
+  const fetchComments = async () => {
     try {
       let response = await fetch(
         `https://striveschool-api.herokuapp.com/api/comments/${props.elementId}`,
@@ -49,19 +49,7 @@ const CommentArea = (props) => {
       setIsError(true);
       console.log(error);
     }
-  }, [props.elementId]);
-
-  // componentDidMount() {
-  //   if (this.props.elementId !== undefined) {
-  //     this.fetchComments();
-  //   }
-  // }
-
-  useEffect(() => {
-    if (props.elementId !== undefined) {
-      fetchComments();
-    }
-  }, [fetchComments, props.elementId]);
+  };
 
   // componentDidUpdate(prevProps, prevState) {
   //   if (prevProps.elementId !== this.props.elementId) {
@@ -75,7 +63,7 @@ const CommentArea = (props) => {
     setIsLoading(true);
     setComments([]);
     fetchComments();
-  }, [fetchComments, props.elementId]);
+  }, [props.elementId]);
 
   return (
     <div className="d-column">

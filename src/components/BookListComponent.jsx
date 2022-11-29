@@ -3,7 +3,7 @@ import fantasy from "../data/books/fantasy.json";
 import { useState } from "react";
 import CommentArea from "./CommentAreaComponent";
 
-const Booklist = (props) => {
+const Booklist = () => {
   // state = {
   //   searchedQuery: "",
   //   filteredArray: fantasy,
